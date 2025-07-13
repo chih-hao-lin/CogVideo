@@ -107,7 +107,7 @@ def convert_prompt(prompt: str, retry_times: int = 3, type: str = "t2v", image_p
                         "content": f'Create an imaginative video descriptive caption or modify an earlier caption in ENGLISH for the user input: " {text} "',
                     },
                 ],
-                model="glm-4-plus",  # glm-4-plus and gpt-4o have be tested
+                model="gpt-4o",  # glm-4-plus and gpt-4o have be tested
                 temperature=0.01,
                 top_p=0.7,
                 stream=False,

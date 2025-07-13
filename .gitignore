@@ -7,7 +7,6 @@ logs/
 *.DS_Store
 .idea
 output*
-test*
 venv
 **/.swp
 **/*.log
