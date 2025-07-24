@@ -60,6 +60,7 @@ class DDIMInversionArguments(TypedDict):
     dtype: torch.dtype
     seed: int
     device: torch.device
+    save_latents: bool
 
 
 def get_args() -> DDIMInversionArguments:
@@ -107,6 +108,7 @@ def get_args() -> DDIMInversionArguments:
     parser.add_argument(
         "--device", type=str, default="cuda", choices=["cuda", "cpu"], help="Device for inference"
     )
+    parser.add_argument("--save_latents", action="store_true", help="Save the latents")
 
     args = parser.parse_args()
     args.dtype = torch.bfloat16 if args.dtype == "bf16" else torch.float16
@@ -470,6 +472,7 @@ def ddim_inversion(
     dtype: torch.dtype,
     seed: int,
     device: torch.device,
+    save_latents: bool,
 ):
     pipeline: CogVideoXPipeline = CogVideoXPipeline.from_pretrained(
         model_path, torch_dtype=dtype
@@ -499,7 +502,8 @@ def ddim_inversion(
     with OverrideAttnProcessors(transformer=pipeline.transformer):
         recon_latents = sample(
             pipeline=pipeline,
-            latents=torch.randn_like(video_latents),
+            # latents=torch.randn_like(video_latents),
+            latents=inverse_latents[-1], # use the last latents as the initial latents
             scheduler=pipeline.scheduler,
             prompt=prompt,
             num_inference_steps=num_inference_steps,
@@ -508,6 +512,16 @@ def ddim_inversion(
             reference_latents=reversed(inverse_latents),
         )
     filename, _ = os.path.splitext(os.path.basename(video_path))
+    os.makedirs(output_path, exist_ok=True)
+
+    # save the latents
+    if save_latents:
+        inverse_latents_path = os.path.join(output_path, f"inversion.pt")
+        torch.save(inverse_latents.detach().cpu(), inverse_latents_path)
+        recon_latents_path = os.path.join(output_path, f"reconstruction.pt")
+        torch.save(recon_latents.detach().cpu(), recon_latents_path)
+
+    # save the videos
     inverse_video_path = os.path.join(output_path, f"{filename}_inversion.mp4")
     recon_video_path = os.path.join(output_path, f"{filename}_reconstruction.mp4")
     export_latents_to_video(pipeline, inverse_latents[-1], inverse_video_path, fps)
