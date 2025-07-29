@@ -100,10 +100,6 @@ def sample_latents_last_n_steps(
     # 8. Denoising loop
     num_warmup_steps = max(len(timesteps) - num_inference_steps * scheduler.order, 0)
     skip_n_steps = len(timesteps) - last_n_steps
-    print('num_warmup_steps:', num_warmup_steps)
-    print('scheduler.order:', scheduler.order)
-    print('len(timesteps):', len(timesteps))
-    print('skip_n_steps', skip_n_steps)
 
     with pipeline.progress_bar(total=num_inference_steps) as progress_bar:
         for i, t in enumerate(timesteps):
@@ -289,7 +285,7 @@ def main():
         prompt=prompt,
         num_inference_steps=num_inference_steps,
         guidance_scale=args.guidance_scale,
-        generator=torch.Generator(device=args.device).manual_seed(args.seed),
+        generator=torch.Generator(device=device).manual_seed(seed),
         reference_latents=None,
     )
 

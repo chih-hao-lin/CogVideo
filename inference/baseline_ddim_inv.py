@@ -3,6 +3,7 @@ import math
 import os
 from typing import Any, Dict, List, Optional, Tuple, TypedDict, Union, cast
 
+import numpy as np
 import torch
 import torch.nn.functional as F
 import torchvision.transforms as T
@@ -29,6 +30,7 @@ from ddim_inversion import (
     export_latents_to_video,
     sample,
 )
+from baseline_sdedit import sample_latents_last_n_steps
 
 @torch.no_grad()
 def main():
@@ -50,6 +52,9 @@ def main():
     )
     parser.add_argument(
         "--num_inference_steps", type=int, default=50, help="Number of inference steps"
+    )
+    parser.add_argument(
+        "--t_0", type=float, default=0.0, help="Noise level in (0, 1)"
     )
     parser.add_argument(
         "--skip_frames_start", type=int, default=0, help="Number of skipped frames from the start"
@@ -77,8 +82,9 @@ def main():
     )
     parser.add_argument("--save_latents", action="store_true", help="Save the latents")
     args = parser.parse_args()
-    args.dtype = torch.bfloat16 if args.dtype == "bf16" else torch.float16
-    args.device = torch.device(args.device)
+    dtype = torch.bfloat16 if args.dtype == "bf16" else torch.float16
+    device = torch.device(args.device)
+    t_0 = np.clip(args.t_0, 0.0, 1.0)
     os.makedirs(args.output_path, exist_ok=True)
 
     with open(args.prompt_path, "r") as f:
@@ -89,38 +95,50 @@ def main():
         f.write(prompt)
 
     pipeline = CogVideoXPipeline.from_pretrained(
-        args.model_path, torch_dtype=args.dtype
-    ).to(device=args.device)
+        args.model_path, torch_dtype=dtype
+    ).to(device=device)
 
-    inverse_latents = torch.load(args.latent_path).to(args.device)
-    with OverrideAttnProcessors(transformer=pipeline.transformer):
-        recon_latents = sample(
-            pipeline=pipeline,
-            latents=torch.randn_like(inverse_latents[-1]),
-            # latents=inverse_latents[-1], # use the last latents as the initial latents
-            scheduler=pipeline.scheduler,
-            prompt=prompt,
-            num_inference_steps=args.num_inference_steps,
-            guidance_scale=args.guidance_scale,
-            generator=torch.Generator(device=args.device).manual_seed(args.seed),
-            reference_latents=reversed(inverse_latents),
-        )
+    scheduler = pipeline.scheduler    
+    timesteps, num_inference_steps = retrieve_timesteps(scheduler, args.num_inference_steps, device)
+    last_n_steps = int(t_0 * num_inference_steps)
 
-    # recon_latents = sample(
-    #     pipeline=pipeline,
-    #     latents=torch.randn_like(inverse_latents[-1]),
-    #     # latents=inverse_latents[-1], # use the last latents as the initial latents
-    #     scheduler=pipeline.scheduler,
-    #     prompt=prompt,
-    #     num_inference_steps=args.num_inference_steps,
-    #     guidance_scale=args.guidance_scale,
-    #     generator=torch.Generator(device=args.device).manual_seed(args.seed),
-    #     reference_latents=None, #reversed(inverse_latents),
-    # )
+    inverse_latents = torch.load(args.latent_path).to(device)
+    last_n_steps = np.clip(last_n_steps, 0, inverse_latents.shape[0] - 1)
+    print(f"last_n_steps: {last_n_steps}")
+    noisy_video_latents = inverse_latents[last_n_steps]
+    video_path = os.path.join(args.output_path, "noisy.mp4")
+    export_latents_to_video(pipeline, noisy_video_latents, video_path, args.fps)
+
+    # Denoise
+    denoised_latents = sample_latents_last_n_steps(
+        pipeline=pipeline,
+        latents=noisy_video_latents,
+        # latents=torch.randn_like(noisy_video_latents),
+        scheduler=pipeline.scheduler,
+        last_n_steps=last_n_steps,
+        prompt=prompt,
+        num_inference_steps=num_inference_steps,
+        guidance_scale=args.guidance_scale,
+        generator=torch.Generator(device=device).manual_seed(args.seed),
+        reference_latents=None,
+    )
+
+    # with OverrideAttnProcessors(transformer=pipeline.transformer):
+    #     denoised_latents = sample(
+    #         pipeline=pipeline,
+    #         latents=torch.randn_like(inverse_latents[-1]),
+    #         # latents=inverse_latents[-1], # use the last latents as the initial latents
+    #         scheduler=pipeline.scheduler,
+    #         prompt=prompt,
+    #         num_inference_steps=args.num_inference_steps,
+    #         guidance_scale=args.guidance_scale,
+    #         generator=torch.Generator(device=args.device).manual_seed(args.seed),
+    #         reference_latents=reversed(inverse_latents),
+    #     )
     
     
     video_path = os.path.join(args.output_path, "video.mp4")
-    export_latents_to_video(pipeline, recon_latents[-1], video_path, args.fps)
+    export_latents_to_video(pipeline, denoised_latents, video_path, args.fps)
 
 if __name__ == "__main__":
     main()
