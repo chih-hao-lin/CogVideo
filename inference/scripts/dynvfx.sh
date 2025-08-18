@@ -18,12 +18,27 @@
 #     --output_path /work/hdd/benk/cl121/CogVideo/inference/outputs/dynvfx/horse_f12/vlm_agent.json
 
 # Mask estimation
-cd /work/hdd/benk/cl121/EVF-SAM
-python inference_video.py  \
-  --version YxZhang/evf-sam2 \
-  --precision='fp16' \
-  --vis_save_path "/work/hdd/benk/cl121/CogVideo/inference/outputs/dynvfx/horse_f12/mask" \
-  --model_type sam2   \
-  --video_path "/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f12/horse/horse.mp4" \
-  --prompt "horse"
-cd /work/hdd/benk/cl121/CogVideo/inference
+# cd /work/hdd/benk/cl121/EVF-SAM
+# python inference_video.py  \
+#     --version YxZhang/evf-sam2 \
+#     --precision='fp16' \
+#     --model_type sam2   \
+#     --video_path "/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f12/horse/horse.mp4" \
+#     --vis_save_path "/work/hdd/benk/cl121/CogVideo/inference/outputs/dynvfx/horse_f12/mask_orig.mp4" \
+#     --prompt "horse"
+# cd /work/hdd/benk/cl121/CogVideo/inference
+
+# Anchor Extended Attention + Content Harmonization
+t_0=1.0
+aea_dropout_fg=0.3
+aea_dropout_bg=0.2
+python dynvfx.py \
+    --model_path THUDM/CogVideoX-5B \
+    --t_0 $t_0 \
+    --aea_dropout_fg $aea_dropout_fg \
+    --aea_dropout_bg $aea_dropout_bg \
+    --prompt_path    /work/hdd/benk/cl121/CogVideo/inference/outputs/dynvfx/horse_f12/vlm_agent.json \
+    --latent_path    /work/hdd/benk/cl121/CogVideo/inference/outputs/dynvfx/horse_f12/inversion.pt \
+    --video_path     /work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f12/horse/horse.mp4 \
+    --mask_orig_path /work/hdd/benk/cl121/CogVideo/inference/outputs/dynvfx/horse_f12/mask_orig.mp4 \
+    --output_path    /work/hdd/benk/cl121/CogVideo/inference/outputs/dynvfx/horse_f12/output/t0-$t_0-aea_fg-$aea_dropout_fg-bg-$aea_dropout_bg.mp4

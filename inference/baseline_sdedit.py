@@ -37,10 +37,10 @@ def sample_latents_last_n_steps(
     pipeline: CogVideoXPipeline,
     latents: torch.FloatTensor,
     scheduler: Union[DDIMInverseScheduler, CogVideoXDDIMScheduler],
-    last_n_steps: int,
     prompt: Optional[Union[str, List[str]]] = None,
     negative_prompt: Optional[Union[str, List[str]]] = None,
     num_inference_steps: int = 50,
+    last_n_steps: int = 50,
     guidance_scale: float = 6,
     use_dynamic_cfg: bool = False,
     eta: float = 0.0,
@@ -70,6 +70,7 @@ def sample_latents_last_n_steps(
         prompt_embeds = torch.cat([negative_prompt_embeds, prompt_embeds], dim=0)
     if reference_latents is not None:
         prompt_embeds = torch.cat([prompt_embeds] * 2, dim=0)
+    # prompt_embeds.shape: [2, text_seq_length, 4096]
 
     # 4. Prepare timesteps
     timesteps, num_inference_steps = retrieve_timesteps(scheduler, num_inference_steps, device)
