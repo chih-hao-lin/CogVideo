@@ -21,8 +21,8 @@ The overall atmosphere might change of course due to this addition to scene.
 - **source_scene_caption**: source_scene_caption will be - A detailed caption of the source scene. If provided, use the given caption.
 - **vfx_conversation**: A simulated conversation about how the new content should be integrated into the scene.
 - **composited_scene_caption**: will be - A detailed caption of the composited scene, integrating the new content.
-- **object_original**: list of major objects that should be preserved after new contents are added into the scene.
-- **object_edit**: list of major objects in the new content.
+- **object_original**: name of major object that should be preserved after new contents are added into the scene.
+- **object_edit**: name of major object in the new content.
 **Note**:The composited_scene_caption and source_scene caption must each have between 90-95 words. Extra words will be ignored.
 **Note**:The vfx_conversation could be as long as required in order to succeed.
 **Note**: Don't start the composited_scene_caption with - "The scene now.." or "Added to the scene" "Scene has transformed",

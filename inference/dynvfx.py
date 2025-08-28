@@ -56,10 +56,13 @@ def get_args():
         "--latent_path", type=str, required=True, help="Path of the latent"
     )
     parser.add_argument(
-        "--video_path", type=str, required=True, help="Path of the video for inversion"
+        "--video_path", type=str, required=True, help="Path of the input video"
     )
     parser.add_argument(
         "--mask_orig_path", type=str, required=True, help="Path of the O_orig mask"
+    )
+    parser.add_argument(
+        "--video_edit_path", type=str, default=None, help="Path of the edited video (previous output)"
     )
     parser.add_argument(
         "--mask_edit_path", type=str, default=None, help="Path of the O_edit mask"
@@ -119,13 +122,14 @@ def main():
     set_seed(args.seed)
     dtype = torch.bfloat16 if args.dtype == "bf16" else torch.float16
     device = torch.device(args.device)
-    os.makedirs(os.path.dirname(args.output_path), exist_ok=True)
+    dir_output = os.path.dirname(args.output_path)
+    os.makedirs(dir_output, exist_ok=True)
 
     # Load prompt
     with open(args.prompt_path, "r") as f:
         prompt_dict = json.load(f)
     prompt = prompt_dict["composited_scene_caption"]
-    prompt_save_path = os.path.join(os.path.dirname(args.output_path), "prompt.txt")
+    prompt_save_path = os.path.join(dir_output, "prompt.txt")
     with open(prompt_save_path, "w") as f:
         f.write(prompt)
 
@@ -144,6 +148,7 @@ def main():
         max_num_frames=args.max_num_frames,
         frame_sample_step=args.frame_sample_step,
     ).to(device=device)
+    video_latents = encode_video_frames(vae=pipeline.vae, video_frames=video_frames)
 
     # Load mask frames
     mask_orig_frames = get_video_frames(
@@ -156,7 +161,35 @@ def main():
         frame_sample_step=args.frame_sample_step,
     ).to(device=device)
 
-    video_latents = encode_video_frames(vae=pipeline.vae, video_frames=video_frames)
+    # Estimate and apply residual x_res
+    if args.video_edit_path != None and args.mask_edit_path != None:
+        print("Applying residual x_res")
+        video_edit_frames = get_video_frames(
+            video_path=args.video_edit_path,
+            width=args.width,
+            height=args.height,
+            skip_frames_start=args.skip_frames_start,
+            skip_frames_end=args.skip_frames_end,
+            max_num_frames=args.max_num_frames,
+            frame_sample_step=args.frame_sample_step,
+        ).to(device=device)
+        video_edit_latents = encode_video_frames(vae=pipeline.vae, video_frames=video_edit_frames)
+
+        mask_edit_frames = get_video_frames(
+            video_path=args.mask_edit_path,
+            width=args.width,
+            height=args.height,
+            skip_frames_start=args.skip_frames_start,
+            skip_frames_end=args.skip_frames_end,
+            max_num_frames=args.max_num_frames,
+            frame_sample_step=args.frame_sample_step,
+        ).to(device=device)
+        latent_mask_edit = get_latents_mask(
+            mask_frames=mask_edit_frames,
+            pipeline=pipeline,
+        ).unsqueeze(2).to(video_latents.dtype)
+        
+        video_latents = video_latents + latent_mask_edit * (video_edit_latents - video_latents)
 
     # Get timesteps and alphas
     scheduler = pipeline.scheduler    
