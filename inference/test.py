@@ -81,9 +81,9 @@ def merge_videos():
     paths = [
         "/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/horse/horse.mp4",
         "/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/horse/horse_knight.mp4",
-        "/work/hdd/benk/cl121/CogVideo/inference/outputs/dynvfx/horse_f12/test_iterative_4/output_4.mp4"
+        "/work/hdd/benk/cl121/CogVideo/inference/outputs/dynvfx/horse_f12/test_iterative_4_seed_4/output_4.mp4"
     ]
-    path_save = "/work/hdd/benk/cl121/CogVideo/inference/outputs/dynvfx/horse_f12/test_iterative_4/merged.mp4"
+    path_save = "/work/hdd/benk/cl121/CogVideo/inference/outputs/dynvfx/horse_f12/test_iterative_4_seed_4/merged.mp4"
 
     # Read all videos
     vrs = [decord.VideoReader(p) for p in paths]

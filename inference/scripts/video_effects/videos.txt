@@ -1,0 +1,94 @@
+# beagle + dragon
+Prompt: Add a fire breathing dragon chasing the dog
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/beagle/beagle.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/beagle/beagle_dragon.mp4
+
+# bikers + dino
+Prompt: Add dinosaurs eating leaves from trees, taking big bites
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/bikers/bikers.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/bikers/bikers_dino.mp4
+
+# box + puppy
+Prompt: Add a puppy peaking its head out of the box
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/box/box.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/box/box_puppy.mp4
+
+# coral + shark
+Prompt: Add a group of sharks swimming in the background
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/coral/coral.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/coral/coral_shark.mp4
+
+# coral + jellyfish
+Prompt: Add a group of jellyfish floating
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/coral/coral.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/coral/cora_jellyfish.mp4
+
+# creek + deer
+Prompt: Add a pair of deer drinking water from the creek
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/creek/creek.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/creek/creek_deer.mp4
+
+# cycle_view + explosion
+Prompt: Add massive explosion from the mountain
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/cycle_view/cycle_view.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/cycle_view/cycle_view_explosion.mp4
+
+# dancer_stage + audience
+Prompt: Add audiences in the seats
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/dancer_stage/dancer_stage.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/dancer_stage/dancer_audience.mp4
+
+# exotic_road + workers
+Prompt: Add many workers in the rice field, cutting crops
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/exotic_road/exotic_road.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/exotic_road/exotic_road_workers.mp4
+
+# girl_beach + dog
+Prompt: Add a puppy running beside the woman
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/girl_beach/girl_beach.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/girl_beach/beach_dog.mp4
+
+# girl_living_room + bear
+Prompt: Add a bear dancing with the woman
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/girl_living_room/girl_living_room.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/girl_living_room/girl_living_room_bear.mp4
+
+# girl_living_room + balloons
+Prompt: Add balloons bouncing and swaying, surrounding the woman. Many, colorful
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/girl_living_room/girl_living_room.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/girl_living_room/girl_living_room_balloons.mp4
+
+# jogging_river + golden
+Prompt: Add a playful golden retriever swimming trying to catch up with the joggers
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/jogging_river/jogging_river.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/jogging_river/jogging_river_golden.mp4
+
+# kid_game + bear
+Prompt: Add a teddy bear on the left of the kid
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/kid_game/kid_game.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/kid_game/kid_game_bear.mp4
+
+# scuba + whale
+Prompt: Add a majestic whale in the background
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/scuba/scuba.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/scuba/scuba_whale.mp4
+
+# taxi + tsunami
+Prompt: Add a massive tsunami flooding the city, water everywhere, apocalyptic
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/taxi/taxi.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/taxi/taxi_tsunami.mp4
+
+# tree_sunlight + giraffe
+Prompt: Add a giraffe walking
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/tree_sunlight/tree_sunlight.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/tree_sunlight/tree_sunlight_giraffe.mp4
+
+# tree_sunlight + elephant
+Prompt: Add a elephant walking
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/tree_sunlight_2/tree_sunlight_2.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/tree_sunlight_2/tree_sunlight_elephant.mp4
+
+# wis_trees + dinosaur
+Prompt: Add a dinosaur walking on the road
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/wis_trees/wis_trees.mp4
+/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/wis_trees/wis_trees_5.mp4

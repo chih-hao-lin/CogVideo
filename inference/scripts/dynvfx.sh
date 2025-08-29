@@ -78,16 +78,21 @@ PATH_VIDEO=/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f12/horse/hor
 PROMPT_ORIG="horse"
 PROMPT_EDIT="knight"
 PATH_MASK_ORIG=$DIR_OUTPUT/mask_orig.mp4
+SEED=0
 
 # id, t_0, aea_dropout_fg, aea_dropout_bg
 params=(
     "0 1.0 0.3 0.2"
-    "1 0.8 0.3 0.2"
-    "2 0.5 0.0 0.0"
+    "1 0.9 0.3 0.2"
+    "2 0.7 0.3 0.2"
+    "3 0.5 0.3 0.2"
+    "4 0.3 0.0 0.0"
 )
 
-DIR_SAVE=$DIR_OUTPUT/test_iterative_0
+DIR_SAVE=$DIR_OUTPUT/test_iterative_4_seed_$SEED
 mkdir -p $DIR_SAVE
+cp $DIR_DYNVFX/scripts/delta-job.sh $DIR_SAVE
+
 for param in "${params[@]}"; do
     set -- $param
     id=$1
@@ -107,6 +112,7 @@ for param in "${params[@]}"; do
             --latent_path       $PATH_LATENT \
             --video_path        $PATH_VIDEO \
             --mask_orig_path    $PATH_MASK_ORIG \
+            --seed              $SEED \
             --output_path       $DIR_SAVE/output_$id.mp4
     else
         PATH_VIDEO_EDIT=$DIR_SAVE/output_$(($id-1)).mp4
@@ -122,6 +128,7 @@ for param in "${params[@]}"; do
             --mask_orig_path    $PATH_MASK_ORIG \
             --video_edit_path   $PATH_VIDEO_EDIT \
             --mask_edit_path    $PATH_MASK_EDIT \
+            --seed              $SEED \
             --output_path       $DIR_SAVE/output_$id.mp4
     fi
 
