@@ -1,8 +1,8 @@
 #!/bin/sh
 #
 #SBATCH --job-name=girl_living_room_balloons
-#SBATCH --output=/work/hdd/benk/cl121/CogVideo/inference/outputs/logs/%j.out
-#SBATCH --error=/work/hdd/benk/cl121/CogVideo/inference/outputs/logs/%j.err
+#SBATCH --output=/work/hdd/benk/cl121/CogVideo/inference/outputs/logs/%j_girl_living_room_balloons.out
+#SBATCH --error=/work/hdd/benk/cl121/CogVideo/inference/outputs/logs/%j_girl_living_room_balloons.err
 #
 #SBATCH --account=bfaf-delta-gpu
 #SBATCH --partition=gpuA100x4
@@ -19,13 +19,13 @@ cd /work/hdd/benk/cl121/CogVideo/inference
 MODEL_PATH=THUDM/CogVideoX-5B
 DIR_SAM=/work/hdd/benk/cl121/EVF-SAM
 DIR_DYNVFX=/work/hdd/benk/cl121/CogVideo/inference
-DIR_OUTPUT=$DIR_DYNVFX/outputs/dynvfx/girl_living_room_balloons
+DIR_OUTPUT=$DIR_DYNVFX/outputs/dynvfx_sem/girl_living_room_balloons
 PATH_PROMPT=$DIR_OUTPUT/vlm_agent.json
 PATH_LATENT=$DIR_OUTPUT/inversion.pt
 PATH_VIDEO=/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/girl_living_room/girl_living_room.mp4
 PROMPT="Add balloons bouncing and swaying, surrounding the woman. Many, colorful"
-PROMPT_ORIG="woman"
-PROMPT_EDIT="balloons"
+PROMPT_ORIG="[semantic] woman"
+PROMPT_EDIT="[semantic] balloons"
 PATH_MASK_ORIG=$DIR_OUTPUT/mask_orig.mp4
 SEED=0
 DIR_SAMPLE=$DIR_OUTPUT/sampling_0_seed_$SEED
@@ -35,11 +35,12 @@ NUM_SAMPLES=250
 
 # id, t_0, aea_dropout_fg, aea_dropout_bg
 params=(
-    "0 1.0 0.3 0.2"
-    "1 0.9 0.3 0.2"
+    "0 0.9 0.3 0.2"
+    "1 0.8 0.3 0.2"
     "2 0.7 0.3 0.2"
     "3 0.5 0.3 0.2"
-    "4 0.3 0.0 0.0"
+    "4 0.3 0.3 0.2"
+    "5 0.1 0.3 0.2"
 )
 
 # VLM Agent
@@ -57,7 +58,7 @@ python inference_video.py  \
     --model_type sam2   \
     --video_path $PATH_VIDEO \
     --vis_save_path $PATH_MASK_ORIG \
-    --prompt $PROMPT_ORIG
+    --prompt "$PROMPT_ORIG"
 cd $DIR_DYNVFX
 
 # DDIM Inversion
@@ -118,6 +119,6 @@ for param in "${params[@]}"; do
         --model_type sam2 \
         --video_path $DIR_SAMPLE/output_$id.mp4 \
         --vis_save_path $DIR_SAMPLE/mask_edit_$id.mp4 \
-        --prompt $PROMPT_EDIT
+        --prompt "$PROMPT_EDIT"
     cd $DIR_DYNVFX
 done

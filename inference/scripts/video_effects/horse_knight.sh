@@ -1,18 +1,33 @@
-#!/bin/bash
+#!/bin/sh
+#
+#SBATCH --job-name=horse_knight
+#SBATCH --output=/work/hdd/benk/cl121/CogVideo/inference/outputs/logs/%j_horse_knight.out
+#SBATCH --error=/work/hdd/benk/cl121/CogVideo/inference/outputs/logs/%j_horse_knight.err
+#
+#SBATCH --account=bfaf-delta-gpu
+#SBATCH --partition=gpuA100x4
+#SBATCH --time=2-0:00
+#SBATCH --mem=64GB
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=8
+#SBATCH --gpus=1
+
+cd /work/hdd/benk/cl121/CogVideo/inference
 
 # Set the directory paths
 MODEL_PATH=THUDM/CogVideoX-5B
 DIR_SAM=/work/hdd/benk/cl121/EVF-SAM
 DIR_DYNVFX=/work/hdd/benk/cl121/CogVideo/inference
-DIR_OUTPUT=$DIR_DYNVFX/outputs/dynvfx/horse_knight # edit this
+DIR_OUTPUT=$DIR_DYNVFX/outputs/dynvfx_sem/horse_knight # edit this
 PATH_PROMPT=$DIR_OUTPUT/vlm_agent.json
 PATH_LATENT=$DIR_OUTPUT/inversion.pt
 PATH_VIDEO=/work/hdd/benk/cl121/dynvfx.github.io/sm/assets/results_f9/horse/horse.mp4 # edit this
 PROMPT="add a majestic knight riding the horse!" # edit this
-PROMPT_ORIG="horse" # edit this
-PROMPT_EDIT="knight" # edit this
+PROMPT_ORIG="[semantic] horse" # edit this
+PROMPT_EDIT="[semantic] knight" # edit this
 PATH_MASK_ORIG=$DIR_OUTPUT/mask_orig.mp4
-SEED=0
+SEED=4
 DIR_SAMPLE=$DIR_OUTPUT/sampling_0_seed_$SEED # edit this
 mkdir -p $DIR_SAMPLE
 cp $DIR_DYNVFX/scripts/video_effects/horse_knight.sh $DIR_SAMPLE # edit this
@@ -20,11 +35,12 @@ NUM_SAMPLES=250
 
 # id, t_0, aea_dropout_fg, aea_dropout_bg
 params=(
-    "0 1.0 0.3 0.2"
-    "1 0.9 0.3 0.2"
+    "0 0.9 0.3 0.2"
+    "1 0.8 0.3 0.2"
     "2 0.7 0.3 0.2"
     "3 0.5 0.3 0.2"
-    "4 0.3 0.0 0.0"
+    "4 0.3 0.3 0.2"
+    "5 0.1 0.3 0.2"
 )
 
 # VLM Agent
@@ -42,7 +58,7 @@ python inference_video.py  \
     --model_type sam2   \
     --video_path $PATH_VIDEO \
     --vis_save_path $PATH_MASK_ORIG \
-    --prompt $PROMPT_ORIG
+    --prompt "$PROMPT_ORIG"
 cd $DIR_DYNVFX
 
 # DDIM Inversion
@@ -103,6 +119,6 @@ for param in "${params[@]}"; do
         --model_type sam2 \
         --video_path $DIR_SAMPLE/output_$id.mp4 \
         --vis_save_path $DIR_SAMPLE/mask_edit_$id.mp4 \
-        --prompt $PROMPT_EDIT
+        --prompt "$PROMPT_EDIT"
     cd $DIR_DYNVFX
 done
