@@ -1,8 +1,19 @@
+# DynVFX
+### Set up
+- The code is tested on A100, whose VRAM is 40 GB.
+- Follow Cogvideo instruction to set up conda environment. 
+- Download the demo videos: [videos w/ 9 frames (used due to memory constraints of A100)](https://uofi.box.com/s/tgrl476iu6t07xgsb5zw4v7vznv25wvp), [videos w/ 25 frames (official demo)](https://uofi.box.com/s/56n30aeam2lpkkjo8nvak2jf41gtqdfm)
+- Set up OpenAI API key, and save the key as `.txt` file locally
+- git clone the segmentation model [EVF-SAM (my fork)](git@github.com:chih-hao-lin/EVF-SAM.git) and set up environment accordingly. 
+
+### How to run
+- Modify the OpenAI api key file in `vlm_agent.py` `read_api_key()`
+- All the scripts are in `inference/scripts/video_effects`
+  - Modify the paths of `DIR_DYNVFX`, `DIR_SAM`, and `PATH_VIDEO`
+- Run each script for generating VFX at input video
+
+
 # CogVideo & CogVideoX
-
-[中文阅读](./README_zh.md)
-
-[日本語で読む](./README_ja.md)
 
 <div align="center">
 <img src=resources/logo.svg width="50%"/>
